@@ -24,16 +24,76 @@ class Movie(db.Model):
     director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
     director = db.relationship("Director")
 
+class MovieSchema(Schema):
+    id = fields.Int()
+    title = fields.Str()
+    description = fields.Str()
+    trailer = fields.Str()
+    year = fields.Int()
+    rating = fields.Float()
+    genre_id = fields.Int()
+    genre = fields.Str()
+    director_id = fields.Int()
+    director = fields.Str()
+
+
+
 class Director(db.Model):
     __tablename__ = 'director'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
 
 
+
+class DirectorSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+
+
 class Genre(db.Model):
     __tablename__ = 'genre'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+
+
+class GenreSchema
+
+
+api = Api(app)
+
+movies_ns = api.namespace('movies')
+directors_ns = api.namespace('directors')
+genres_ns = api.namespace('genres')
+
+
+movie_schema = MovieSchema()
+movies_schema = MovieSchema(many=True)
+director_schema = Di
+
+@movies_ns.route('/')
+class MoviesView(Resource):
+    def get(self):
+        movies = Movie.query.all()
+        data_movies = movies_schema.dump(movies)
+        return data_movies, 200
+
+    def get_by_dir(self, director_id):
+        director_request = request.args.get(director_id)
+        movies = Movie.query.all()
+        directors =
+        # directors_movies = [movie for movie in movies if movie[director_id] == director
+        pass
+
+
+
+
+@movies_ns.route('/<int:id>')
+
+class MovieView(Resource):
+    def get(self, id):
+        movie = Movie.query.get(id)
+        movie_data = movie_schema.dump(movie)
+        return movie_data, 200
 
 
 
