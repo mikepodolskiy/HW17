@@ -56,8 +56,9 @@ class Genre(db.Model):
     name = db.Column(db.String(255))
 
 
-class GenreSchema
-
+class GenreSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
 
 api = Api(app)
 
@@ -68,21 +69,30 @@ genres_ns = api.namespace('genres')
 
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many=True)
-director_schema = Di
+director_schema = DirectorSchema()
 
 @movies_ns.route('/')
 class MoviesView(Resource):
     def get(self):
+        director_id = request.args.get('director_id')
+        genre_id = request.args.get('genre_id')
+        if director_id:
+            director_movies = Movie.query.filter(Movie.director_id == director_id)
+            return movies_schema.dump(director_movies)
+        if genre_id:
+            genre_movies = Movie.query.filter(Movie.genre_id == genre_id)
+            return movies_schema.dump(genre_movies)
+
         movies = Movie.query.all()
         data_movies = movies_schema.dump(movies)
         return data_movies, 200
 
-    def get_by_dir(self, director_id):
-        director_request = request.args.get(director_id)
+    def get_by_dir(self):
+        director_request = request.args.get('director_id')
         movies = Movie.query.all()
-        directors =
-        # directors_movies = [movie for movie in movies if movie[director_id] == director
-        pass
+        director = Director.query.get(director_request)
+        directors_movies = [movie for movie in movies if movie["director"] == director]
+        return movies_schema.dump(directors_movies)
 
 
 
