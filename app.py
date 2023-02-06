@@ -90,6 +90,14 @@ class MoviesView(Resource):
         return data_movies, 200
 
 
+    def post(self):
+        request_data = request.json
+        new_movie = Movie(**request_data)
+        db.session.add(new_movie)
+        db.session.commit()
+        return 'Element added', 201
+
+
 
 
 @movies_ns.route('/<int:id>')
@@ -146,6 +154,13 @@ class GenresView(Resource):
     def get(self):
         genres = Genre.query.all()
         return genres_schema.dump(genres), 200
+
+    def post(self):
+        request_data = request.json
+        new_genre = Genre(**request_data)
+        db.session.add(new_genre)
+        db.session.commit()
+        return 'Element added', 201
 
 
 
