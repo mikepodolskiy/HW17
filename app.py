@@ -107,6 +107,26 @@ class MovieView(Resource):
         movie_data = movie_schema.dump(movie)
         return movie_data, 200
 
+    def put(self, id):
+        request_data = request.json
+        movie = Movie.query.get(id)
+        movie.title = request_data.get('title')
+        movie.description = request_data.get('description')
+        movie.trailer = request_data.get('trailer')
+        movie.year = request_data.get('year')
+        movie.rating = request_data.get('rating')
+        movie.genre_id = request_data.get('genre_id')
+        movie.director_id = request_data.get('director_id')
+        db.session.add(movie)
+        db.session.commit()
+        return f'Element {movie.id} updated', 204
+
+    def delete(self, id):
+        movie = Movie.query.get(id)
+        db.session.delete(movie)
+        db.session.commit()
+        return f'Element {movie.id} deleted', 204
+
 
 
 @directors_ns.route('/')
@@ -115,17 +135,7 @@ class DirectorsView(Resource):
         directors = Director.query.all()
         return directors_schema.dump(directors), 200
 
-    # id = db.Column(db.Integer, primary_key=True)
-    # title = db.Column(db.String(255))
-    # description = db.Column(db.String(255))
-    # trailer = db.Column(db.String(255))
-    # year = db.Column(db.Integer)
-    # rating = db.Column(db.Float)
-    # genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
-    # genre = db.relationship("Genre")
-    # director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
-    # director = db.relationship("Director")
-    # def post(self, id):
+
 
     def post(self):
         request_data = request.json
@@ -142,6 +152,20 @@ class DirectorView(Resource):
         director = Director.query.get(id)
         director_data = director_schema.dump(director)
         return director_data, 200
+
+    def put(self, id):
+        request_data = request.json
+        director = Director.query.get(id)
+        director.name = request_data.get('name')
+        db.session.add(director)
+        db.session.commit()
+        return f'Element {director.id} updated', 204
+
+    def delete(self, id):
+        director = Director.query.get(id)
+        db.session.delete(director)
+        db.session.commit()
+        return f'Element {director.id} deleted', 204
 
 
 
@@ -160,7 +184,7 @@ class GenresView(Resource):
         new_genre = Genre(**request_data)
         db.session.add(new_genre)
         db.session.commit()
-        return 'Element added', 201
+        return f'Element {new_genre.id} added', 201
 
 
 
@@ -171,6 +195,21 @@ class GenreView(Resource):
         genre = Genre.query.get(id)
         genre_data = genre_schema.dump(genre)
         return genre_data, 200
+
+    def put(self, id):
+        request_data = request.json
+        genre = Genre.query.get(id)
+        genre.name = request_data.get('name')
+        db.session.add(genre)
+        db.session.commit()
+        return f'Element {genre.id} updated', 204
+
+
+    def delete(self, id):
+        genre = Genre.query.get(id)
+        db.session.delete(genre)
+        db.session.commit()
+        return f'Element {genre.id} deleted', 204
 
 
 
